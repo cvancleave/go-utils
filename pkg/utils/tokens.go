@@ -3,17 +3,16 @@ package utils
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
-func NewJwt(audience string, userId int, key, issuer string, timeout int) (string, error) {
+func NewJwt(id, audience, key, issuer string, timeout int) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Id:        strconv.Itoa(userId),
+		Id:        id,
 		Audience:  audience,
 		Issuer:    issuer,
 		ExpiresAt: time.Now().Add(time.Duration(timeout) * time.Minute).Unix(),
