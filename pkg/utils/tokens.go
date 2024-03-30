@@ -10,11 +10,11 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func NewJwt(email string, userId int, key, issuer string, timeout int) (string, error) {
+func NewJwt(audience string, userId int, key, issuer string, timeout int) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Id:        strconv.Itoa(userId),
-		Audience:  email,
+		Audience:  audience,
 		Issuer:    issuer,
 		ExpiresAt: time.Now().Add(time.Duration(timeout) * time.Minute).Unix(),
 	})
