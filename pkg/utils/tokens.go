@@ -9,21 +9,23 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func NewJwt(id, audience, key, issuer string, timeout int) (string, error) {
+func NewJwt(id, audience, key, issuer string, timeout int) (string, int64, error) {
+
+	expiration := time.Now().Add(time.Duration(timeout) * time.Minute).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Id:        id,
 		Audience:  audience,
 		Issuer:    issuer,
-		ExpiresAt: time.Now().Add(time.Duration(timeout) * time.Minute).Unix(),
+		ExpiresAt: expiration,
 	})
 
 	signedToken, err := token.SignedString([]byte(key))
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
-	return signedToken, nil
+	return signedToken, expiration, nil
 }
 
 func ValidateJwt(token, key, issuer string) error {
